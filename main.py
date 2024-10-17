@@ -9,8 +9,10 @@ frm.grid()
 root.title("Lab 1 Assignment")
 
 
+# Generates the window to change color
 def change_color_window():
 
+    # Invokes the logic
     def change_color_handler():
         rFloat = float(rValue.get())
         gFloat = float(gValue.get())
@@ -20,10 +22,11 @@ def change_color_window():
 
         t.destroy()
 
+    # Generate the labels and entries
     t = Toplevel(root, pady=10, padx=10)
     t.title('RGB Values')
 
-    ttk.Label(t, text="Enter RGB Values").grid(column=0, row=0)
+    ttk.Label(t, text="Enter RGB Modification Factors").grid(column=0, row=0)
 
     r = StringVar()
     rValue = ttk.Entry(t, textvariable=r)
@@ -41,13 +44,16 @@ def change_color_window():
     ttk.Button(t, text="Submit", command=change_color_handler).grid(column=2, row=0)
 
 
+# Generates the window to rotate the image
 def rotate_image_window():
 
+    # Invokes the logic
     def rotate_image_handler(angle):
         imageLogic.rotate_image(angle)
 
         t.destroy()
 
+    # Generates the Label and buttons
     t = Toplevel(root, pady=10, padx=10)
     t.title('Rotate Options')
 
@@ -60,8 +66,10 @@ def rotate_image_window():
     ttk.Button(t, text="270", command=lambda: rotate_image_handler(270)).grid(column=3, row=0)
 
 
+# Generates the window to scale the image
 def scale_image_window():
 
+    # Invoke the logic
     def scale_image_handler():
         scale_factor = float(scaleValue.get())
 
@@ -69,6 +77,7 @@ def scale_image_window():
 
         t.destroy()
 
+    # Generates the labels and entries
     t = Toplevel(root, pady=10, padx=10)
     t.title('Scale Options')
 
@@ -81,16 +90,18 @@ def scale_image_window():
     ttk.Button(t, text="Submit", command=scale_image_handler).grid(column=2, row=0)
 
 
+# Generates the window to posterize
 def posterize_image_window():
 
+    # Invoke the logic
     def posterizing_image_handler():
         levels_to_posterize = int(levelsValue.get())
 
-        # if levels_to_posterize
         imageLogic.posterize(levels_to_posterize)
 
         t.destroy()
 
+    # Generate the label and entries
     t = Toplevel(root, pady=10, padx=10)
     t.title('Posterizing Options')
 
@@ -103,21 +114,16 @@ def posterize_image_window():
     ttk.Button(t, text="Submit", command=posterizing_image_handler).grid(column=2, row=0)
 
 
+# This is the code logic to display the home page including all the functions of the program
 ttk.Label(frm, text="Please select a function:").grid(column=0, row=0)
 
 ttk.Button(frm, text="Select an Image", command=imageLogic.load_picture).grid(column=1, row=0)
-
 ttk.Button(frm, text="Change Color", command=change_color_window).grid(column=2, row=0)
-
 ttk.Button(frm, text="Rotation", command=rotate_image_window).grid(column=3, row=0)
-
 ttk.Button(frm, text="Scaling", command=scale_image_window).grid(column=4, row=0)
-
 ttk.Button(frm, text="Posterization", command=posterize_image_window).grid(column=5, row=0)
-
 ttk.Button(frm, text="Save Image", command=imageLogic.save_picture).grid(column=6, row=0)
-
 ttk.Button(frm, text="Reset Image", command=imageLogic.reset_image).grid(column=7, row=0)
 
-
+# This is the loop function for Tkinter
 root.mainloop()
