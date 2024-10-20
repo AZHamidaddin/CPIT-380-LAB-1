@@ -221,7 +221,7 @@ def save_picture():
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save image: {e}")
 
-            
+
 # Set image to original_image
 def reset_image():
     global image
@@ -230,3 +230,4 @@ def reset_image():
     image = duplicatePicture(original_image)
 
     explore(image)
+    
