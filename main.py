@@ -1,3 +1,4 @@
+
 import imageLogic
 from tkinter import *
 from tkinter import ttk
@@ -117,17 +118,22 @@ def posterize_image_window():
 # This is the code Select an Image
 imageLogic.load_picture()
 
+# Keep the application at the top
+root.attributes('-topmost', True)
 
 # This is the code logic to display the home page including all the functions of the program
 ttk.Label(frm, text="Please select a function:").grid(column=0, row=0)
 
 ttk.Button(frm, text="Select an Image", command=imageLogic.load_picture).grid(column=1, row=0)
 ttk.Button(frm, text="Change Color", command=change_color_window).grid(column=2, row=0)
-ttk.Button(frm, text="Rotation", command=rotate_image_window).grid(column=3, row=0)
-ttk.Button(frm, text="Scaling", command=scale_image_window).grid(column=4, row=0)
-ttk.Button(frm, text="Posterization", command=posterize_image_window).grid(column=5, row=0)
-ttk.Button(frm, text="Save Image", command=imageLogic.save_picture).grid(column=6, row=0)
-ttk.Button(frm, text="Reset Image", command=imageLogic.reset_image).grid(column=7, row=0)
+ttk.Button(frm, text="Make Gray", command=imageLogic.gray).grid(column=3, row=0)
+ttk.Button(frm, text="Make Negative", command=imageLogic.inverse).grid(column=4, row=0)
+ttk.Button(frm, text="Rotation", command=rotate_image_window).grid(column=5, row=0)
+ttk.Button(frm, text="Scaling", command=scale_image_window).grid(column=6, row=0)
+ttk.Button(frm, text="Posterization", command=posterize_image_window).grid(column=7, row=0)
+ttk.Button(frm, text="Save Image", command=imageLogic.save_picture).grid(column=8, row=0)
+ttk.Button(frm, text="Reset Image", command=imageLogic.reset_image).grid(column=9, row=0)
+
 
 # This is the loop function for Tkinter
 root.mainloop()
