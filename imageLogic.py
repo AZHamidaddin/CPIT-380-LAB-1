@@ -16,7 +16,7 @@ def load_picture():
 
     global original_image
     original_image = duplicatePicture(image)
-    
+
     explore(image)
 
 
@@ -42,44 +42,40 @@ def change_color(r, g, b):
 # Makes an image black and wight
 def gray():
     for px in getPixels(image):
-
         # Get the red of the current pixel
-        red=getRed(px)
+        red = getRed(px)
 
         # Get the green of the current pixel
-        green=getGreen(px)
+        green = getGreen(px)
 
         # Get the blue of the current pixel
-        blue=getBlue(px)
+        blue = getBlue(px)
 
-        negColor=makeColor((blue+green+red)/3)
+        negColor = makeColor((blue + green + red) / 3)
 
-        setColor(px,negColor)
+        setColor(px, negColor)
 
-# Show the final rotated image
+    # Show the final rotated image
     explore(image)
-    return image
 
 
 # inverses the image colors
 def inverse():
     for px in getPixels(image):
-        
-         # Get the red of the current pixel
-        red=getRed(px)
+        # Get the red of the current pixel
+        red = getRed(px)
 
         # Get the green of the current pixel
-        green=getGreen(px)
+        green = getGreen(px)
 
         # Get the blue of the current pixel
-        blue=getBlue(px)
+        blue = getBlue(px)
 
-        negColor=makeColor(255-blue,255-green,255-red)
-        setColor(px,negColor)
+        negColor = makeColor(255 - blue, 255 - green, 255 - red)
+        setColor(px, negColor)
 
     # Show the final rotated image
     explore(image)
-    return image
 
 
 # takes user degrees and rotates the image by degrees
@@ -130,7 +126,6 @@ def scale(scale_factor):
         # Now, do the actual copying
         for targetX in range(0, getWidth(canvas)):
             for targetY in range(0, getHeight(canvas)):
-
                 # Calculate corresponding source pixels in the original image
                 sourceX = int(targetX / scale_factor)
                 sourceY = int(targetY / scale_factor)
@@ -148,7 +143,6 @@ def scale(scale_factor):
 
         for targetX in range(0, getWidth(canvas)):
             for targetY in range(0, getHeight(canvas)):
-
                 # Calculate corresponding source pixels in the original image
                 sourceX = int(targetX / scale_factor)
                 sourceY = int(targetY / scale_factor)
@@ -169,7 +163,6 @@ def scale(scale_factor):
 
 # Takes in how many levels the user wishes to posterize with
 def posterize(levels):
-
     # Calculate the interval size for each level
     interval_size = 256 // levels
 
