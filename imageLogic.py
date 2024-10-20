@@ -17,6 +17,8 @@ def load_picture():
     global original_image
     original_image = duplicatePicture(image)
 
+    explore(image)
+
 
 # Gets the pixels of the image and applies the user chosen modifications to it
 def change_color(r, g, b):
@@ -34,6 +36,45 @@ def change_color(r, g, b):
         bValue = getBlue(p)
         setBlue(p, bValue * b)
 
+    explore(image)
+
+
+# Makes an image black and wight
+def gray():
+    for px in getPixels(image):
+        # Get the red of the current pixel
+        red = getRed(px)
+
+        # Get the green of the current pixel
+        green = getGreen(px)
+
+        # Get the blue of the current pixel
+        blue = getBlue(px)
+
+        negColor = makeColor((blue + green + red) / 3)
+
+        setColor(px, negColor)
+
+    # Show the final rotated image
+    explore(image)
+
+
+# inverses the image colors
+def inverse():
+    for px in getPixels(image):
+        # Get the red of the current pixel
+        red = getRed(px)
+
+        # Get the green of the current pixel
+        green = getGreen(px)
+
+        # Get the blue of the current pixel
+        blue = getBlue(px)
+
+        negColor = makeColor(255 - blue, 255 - green, 255 - red)
+        setColor(px, negColor)
+
+    # Show the final rotated image
     explore(image)
 
 
@@ -85,7 +126,6 @@ def scale(scale_factor):
         # Now, do the actual copying
         for targetX in range(0, getWidth(canvas)):
             for targetY in range(0, getHeight(canvas)):
-
                 # Calculate corresponding source pixels in the original image
                 sourceX = int(targetX / scale_factor)
                 sourceY = int(targetY / scale_factor)
@@ -103,7 +143,6 @@ def scale(scale_factor):
 
         for targetX in range(0, getWidth(canvas)):
             for targetY in range(0, getHeight(canvas)):
-
                 # Calculate corresponding source pixels in the original image
                 sourceX = int(targetX / scale_factor)
                 sourceY = int(targetY / scale_factor)
@@ -124,7 +163,6 @@ def scale(scale_factor):
 
 # Takes in how many levels the user wishes to posterize with
 def posterize(levels):
-
     # Calculate the interval size for each level
     interval_size = 256 // levels
 
@@ -183,6 +221,7 @@ def save_picture():
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save image: {e}")
 
+            
 # Set image to original_image
 def reset_image():
     global image
