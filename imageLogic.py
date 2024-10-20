@@ -16,6 +16,8 @@ def load_picture():
 
     global original_image
     original_image = duplicatePicture(image)
+    
+    explore(image)
 
 
 # Gets the pixels of the image and applies the user chosen modifications to it
@@ -35,6 +37,49 @@ def change_color(r, g, b):
         setBlue(p, bValue * b)
 
     explore(image)
+
+
+# Makes an image black and wight
+def gray():
+    for px in getPixels(image):
+
+        # Get the red of the current pixel
+        red=getRed(px)
+
+        # Get the green of the current pixel
+        green=getGreen(px)
+
+        # Get the blue of the current pixel
+        blue=getBlue(px)
+
+        negColor=makeColor((blue+green+red)/3)
+
+        setColor(px,negColor)
+
+# Show the final rotated image
+    explore(image)
+    return image
+
+
+# inverses the image colors
+def inverse():
+    for px in getPixels(image):
+        
+         # Get the red of the current pixel
+        red=getRed(px)
+
+        # Get the green of the current pixel
+        green=getGreen(px)
+
+        # Get the blue of the current pixel
+        blue=getBlue(px)
+
+        negColor=makeColor(255-blue,255-green,255-red)
+        setColor(px,negColor)
+
+    # Show the final rotated image
+    explore(image)
+    return image
 
 
 # takes user degrees and rotates the image by degrees
@@ -182,6 +227,7 @@ def save_picture():
             print(f"Image successfully saved to {file_path}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save image: {e}")
+
 
 # Set image to original_image
 def reset_image():
