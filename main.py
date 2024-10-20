@@ -114,10 +114,6 @@ def posterize_image_window():
     ttk.Button(t, text="Submit", command=posterizing_image_handler).grid(column=2, row=0)
 
 
-# This is the code Select an Image
-imageLogic.load_picture()
-
-
 # This is the code logic to display the home page including all the functions of the program
 ttk.Label(frm, text="Please select a function:").grid(column=0, row=0)
 
