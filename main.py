@@ -1,139 +1,233 @@
+from jes4py import *
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
-import imageLogic
-from tkinter import *
-from tkinter import ttk
-
-root = Tk()
-
-frm = ttk.Frame(root, padding=10)
-frm.grid()
-root.title("Lab 1 Assignment")
+# Intialize the user selected variable and the original image
+image = None
+original_image = None
 
 
-# Generates the window to change color
-def change_color_window():
+# Load the user selected image into image variable
+def load_picture():
+    file = pickAFile()
 
-    # Invokes the logic
-    def change_color_handler():
-        rFloat = float(rValue.get())
-        gFloat = float(gValue.get())
-        bFloat = float(bValue.get())
+    global image
+    image = makePicture(file)
 
-        imageLogic.change_color(rFloat, gFloat, bFloat)
+    global original_image
+    original_image = duplicatePicture(image)
 
-        t.destroy()
-
-    # Generate the labels and entries
-    t = Toplevel(root, pady=10, padx=10)
-    t.title('RGB Values')
-
-    ttk.Label(t, text="Enter RGB Modification Factors").grid(column=0, row=0)
-
-    r = StringVar()
-    rValue = ttk.Entry(t, textvariable=r)
-
-    rValue.grid(column=0, row=1)
-
-    g = StringVar()
-    gValue = ttk.Entry(t, textvariable=g)
-    gValue.grid(column=1, row=1)
-
-    b = StringVar()
-    bValue = ttk.Entry(t, textvariable=b)
-    bValue.grid(column=2, row=1)
-
-    ttk.Button(t, text="Submit", command=change_color_handler).grid(column=2, row=0)
+    explore(image)
 
 
-# Generates the window to rotate the image
-def rotate_image_window():
+# Gets the pixels of the image and applies the user chosen modifications to it
+def change_color(r, g, b):
+    if image is None:
+        print("No image loaded! Please load an image first.")
+        return
 
-    # Invokes the logic
-    def rotate_image_handler(angle):
-        imageLogic.rotate_image(angle)
+    for p in getPixels(image):
+        rValue = getRed(p)
+        setRed(p, rValue * r)
 
-        t.destroy()
+        gValue = getGreen(p)
+        setGreen(p, gValue * g)
 
-    # Generates the Label and buttons
-    t = Toplevel(root, pady=10, padx=10)
-    t.title('Rotate Options')
+        bValue = getBlue(p)
+        setBlue(p, bValue * b)
 
-    ttk.Label(t, text="Choose Rotation Option").grid(column=0, row=0)
-
-    ttk.Button(t, text="90", command=lambda: rotate_image_handler(90)).grid(column=1, row=0)
-
-    ttk.Button(t, text="180", command=lambda: rotate_image_handler(180)).grid(column=2, row=0)
-
-    ttk.Button(t, text="270", command=lambda: rotate_image_handler(270)).grid(column=3, row=0)
+    explore(image)
 
 
-# Generates the window to scale the image
-def scale_image_window():
+# Makes an image black and wight
+def gray():
+    for px in getPixels(image):
+        # Get the red of the current pixel
+        red = getRed(px)
 
-    # Invoke the logic
-    def scale_image_handler():
-        scale_factor = float(scaleValue.get())
+        # Get the green of the current pixel
+        green = getGreen(px)
 
-        imageLogic.scale(scale_factor)
+        # Get the blue of the current pixel
+        blue = getBlue(px)
 
-        t.destroy()
+        negColor = makeColor((blue + green + red) / 3)
 
-    # Generates the labels and entries
-    t = Toplevel(root, pady=10, padx=10)
-    t.title('Scale Options')
+        setColor(px, negColor)
 
-    ttk.Label(t, text="Choose Scale Factor (Higher = Larger)").grid(column=0, row=0)
-
-    scale = StringVar()
-    scaleValue = ttk.Entry(t, textvariable=scale)
-    scaleValue.grid(column=1, row=0)
-
-    ttk.Button(t, text="Submit", command=scale_image_handler).grid(column=2, row=0)
+    # Show the final rotated image
+    explore(image)
 
 
-# Generates the window to posterize
-def posterize_image_window():
+# inverses the image colors
+def inverse():
+    for px in getPixels(image):
+        # Get the red of the current pixel
+        red = getRed(px)
 
-    # Invoke the logic
-    def posterizing_image_handler():
-        levels_to_posterize = int(levelsValue.get())
+        # Get the green of the current pixel
+        green = getGreen(px)
 
-        imageLogic.posterize(levels_to_posterize)
+        # Get the blue of the current pixel
+        blue = getBlue(px)
 
-        t.destroy()
+        negColor = makeColor(255 - blue, 255 - green, 255 - red)
+        setColor(px, negColor)
 
-    # Generate the label and entries
-    t = Toplevel(root, pady=10, padx=10)
-    t.title('Posterizing Options')
-
-    ttk.Label(t, text="Choose Posterizing Levels (2 = B & W)").grid(column=0, row=0)
-
-    levels = StringVar()
-    levelsValue = ttk.Entry(t, textvariable=levels)
-    levelsValue.grid(column=1, row=0)
-
-    ttk.Button(t, text="Submit", command=posterizing_image_handler).grid(column=2, row=0)
+    # Show the final rotated image
+    explore(image)
 
 
-# This is the code Select an Image
-imageLogic.load_picture()
+# takes user degrees and rotates the image by degrees
+def rotate_image(degrees):
+    global image
 
-# Keep the application at the top
-root.attributes('-topmost', True)
+    # Calculate the number of 90-degree rotations needed
+    rotations = (degrees // 90) % 4  # Ensure it stays within 0 to 3 rotations
 
-# This is the code logic to display the home page including all the functions of the program
-ttk.Label(frm, text="Please select a function:").grid(column=0, row=0)
+    for _ in range(rotations):
 
-ttk.Button(frm, text="Select an Image", command=imageLogic.load_picture).grid(column=1, row=0)
-ttk.Button(frm, text="Change Color", command=change_color_window).grid(column=2, row=0)
-ttk.Button(frm, text="Make Gray", command=imageLogic.gray).grid(column=3, row=0)
-ttk.Button(frm, text="Make Negative", command=imageLogic.inverse).grid(column=4, row=0)
-ttk.Button(frm, text="Rotation", command=rotate_image_window).grid(column=5, row=0)
-ttk.Button(frm, text="Scaling", command=scale_image_window).grid(column=6, row=0)
-ttk.Button(frm, text="Posterization", command=posterize_image_window).grid(column=7, row=0)
-ttk.Button(frm, text="Save Image", command=imageLogic.save_picture).grid(column=8, row=0)
-ttk.Button(frm, text="Reset Image", command=imageLogic.reset_image).grid(column=9, row=0)
+        # Create a new picture (canvas) with swapped dimensions for 90-degree rotation
+        width = getWidth(image)
+        height = getHeight(image)
+        rotated_canvas = makeEmptyPicture(height, width)
+
+        # Loop through each pixel in the original image
+        for x in range(0, width):
+            for y in range(0, height):
+                # Get the color of the current pixel
+                color = getColor(getPixel(image, x, y))
+
+                # 90-degree rotation
+                setColor(getPixel(rotated_canvas, y, width - x - 1), color)
+
+        # Update the image to the newly rotated one for further rotations
+        image = rotated_canvas
+
+    # Show the final rotated image
+    explore(image)
+    return image
 
 
-# This is the loop function for Tkinter
-root.mainloop()
+# This function takes in the factor to scale the user's image
+def scale(scale_factor):
+    global image  # Save the result in the global image variable
+
+    # Set up the source and target pictures
+    width = getWidth(image)
+    height = getHeight(image)
+
+    # If the scale factor is less than 1, shrink the canvas
+    if scale_factor < 1:
+
+        # Create the canvas with scaled-down dimensions
+        canvas = makeEmptyPicture(int(width * scale_factor), int(height * scale_factor))
+
+        # Now, do the actual copying
+        for targetX in range(0, getWidth(canvas)):
+            for targetY in range(0, getHeight(canvas)):
+                # Calculate corresponding source pixels in the original image
+                sourceX = int(targetX / scale_factor)
+                sourceY = int(targetY / scale_factor)
+
+                # Get the color from the corresponding source pixel
+                color = getColor(getPixel(image, sourceX, sourceY))
+
+                # Set the color to the shrunk canvas
+                setColor(getPixel(canvas, targetX, targetY), color)
+
+    else:
+
+        # If the scale factor is greater than 1, enlarge the canvas
+        canvas = makeEmptyPicture(int(width * scale_factor), int(height * scale_factor))
+
+        for targetX in range(0, getWidth(canvas)):
+            for targetY in range(0, getHeight(canvas)):
+                # Calculate corresponding source pixels in the original image
+                sourceX = int(targetX / scale_factor)
+                sourceY = int(targetY / scale_factor)
+
+                # Get the color from the corresponding source pixel
+                color = getColor(getPixel(image, sourceX, sourceY))
+
+                # Set the color to the enlarged canvas
+                setColor(getPixel(canvas, targetX, targetY), color)
+
+    # Update the global image with the new scaled version (shrunk or enlarged)
+    image = canvas
+
+    # Show the scaled image
+    show(image)
+    return image
+
+
+# Takes in how many levels the user wishes to posterize with
+def posterize(levels):
+    # Calculate the interval size for each level
+    interval_size = 256 // levels
+
+    # Loop through the pixels
+    for p in getPixels(image):
+
+        # Get the RGB values
+        red = getRed(p)
+        green = getGreen(p)
+        blue = getBlue(p)
+
+        # Posterize the red value
+        if levels == 2:
+            new_red = 0 if red < 128 else 255  # Force values to either 0 or 255
+        else:
+            new_red = (red // interval_size) * interval_size
+        setRed(p, new_red)
+
+        # Posterize the green value
+        if levels == 2:
+            new_green = 0 if green < 128 else 255  # Force values to either 0 or 255
+        else:
+            new_green = (green // interval_size) * interval_size
+        setGreen(p, new_green)
+
+        # Posterize the blue value
+        if levels == 2:
+            new_blue = 0 if blue < 128 else 255  # Force values to either 0 or 255
+        else:
+            new_blue = (blue // interval_size) * interval_size
+        setBlue(p, new_blue)
+
+    # Return the modified picture
+    explore(image)
+
+
+# Saves the modified image into the user's device (Took help from StackOverflow)
+def save_picture():
+    # Initialize Tkinter root (but hide the main window)
+    root = tk.Tk()
+    root.withdraw()
+
+    # Check if the image exists
+    if image is None:
+        messagebox.showerror("Error", "No image to save.")
+        return
+
+    # Open a save dialog and let the user choose the file name and format
+    file_path = filedialog.asksaveasfilename(defaultextension=".jpg", filetypes=[("JPEG", "*.jpg"), ("PNG", "*.png")])
+
+    # If a path is selected, save the image using JES
+    if file_path:
+        try:
+            writePictureTo(image, file_path)  # Use JES function to save the image
+            print(f"Image successfully saved to {file_path}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save image: {e}")
+
+
+# Set image to original_image
+def reset_image():
+    global image
+    global original_image
+
+    image = duplicatePicture(original_image)
+
+    explore(image)
+    
